@@ -1,0 +1,579 @@
+
+GOAL: create a unity VR game to run on quest in a short period of time [1 day]
+
+experience with as many features as possible:
+- VR game [OpenVR prefab]
+- moving around world
+- interacting with objects
+- avoiding obstacle
+- timer
+- UI
+- collisions / intersections
+- user-navigation
+
+
+shooting game - specifics:
+
+- in a 'large' seeming environment
+- primitive-polygon shapes scattered nearby with textures
+- backdrop for world
+- user limted movable area
+- random guns falling down [cubes]
+- random ammo falling down [smaller rects]
+- if too many (10-100) objects appear, the older start disappearing
+- guns are different in: capacity, number of bullets at a time, damage
+- guns can be picked up and combined with ammo w/ feedback
+- guns shoot bullets (lines/cylinders) on user trigger w/ feedback
+- targets move around the world
+- targets different in: speed (base & random), direction, health (acceptable damage)
+- on target hit & destroy with bullet user gets points
+- user can navigate to nearby location
+- user can rotate about vertical
+- timed run
+- UI: main-screen (score, start, quit, background)
+- UI: in-game overlay (score, time remaining)
+- navigation between main-screen & in-game on start/end
+
+................................................................................................
+
+design methodology / paradigm / patterns:
+M/V/C
+
+DATA <-> DISPLAY
+- inter-communication names:
+	controller
+	relay
+	communicator
+	translate
+	connect
+	pass
+	transfer
+	transmit
+
+
+
+
+NAVIGATION
+	- presenting scenes / setting up interactions
+SCENE CONTROLLER:
+	- keeping track of all objects in a scene
+DISPLAY OBJECTS
+	- communicate between instances of models & instances of displayed unity elements
+DATA
+	- models of objects
+MESSAGE PASSING / DISPATCH:
+	- generating & listening of events
+
+
+................................................................................................
+
+
+classes:
+
+Dispatch ++++++++++++++
+	- hash of events
+		- values are arrays of fxn/ctx
+
+Navigation Controller ++++++++++++++
+	- set of scene controllers to start / stop / transition
+	- keep track of current state & events to change state
+
+Scene Controller ++++++++++++++
+	- unity scene & data setup
+	- arrays of things to be accounted for
+
+Player Controller ++++++++++++++
+	- game object
+	- player data
+
+Timer ++++++++++++++
+	- timeStarted
+	- elapsedTime
+	- start/stop
+
+Weapon Controller ++++++++++++++
+	- prefab to instantiate
+	- object instance to track
+
+Enemy Controller ++++++++++++++
+	- instance
+	- model
+
+AmmunitionController ++++++++++++++
+	- instance
+	- model
+
+? ++++++++++++++
+	- instance
+	- model
+
+?Configurations? ++++++++++++++
+	- store level data
+		- player start transform
+		- obstacles
+		- enemies
+		- backgrounds
+
+-----
+
+x Player ++++++++++++++
+	- healthTotal
+	- healthCurrent
+	- score
+	- activeItemLeft
+	- activeItemRight
+	- 
+
+x Enemy ++++++++++++++
+	+ types
+	- type
+	- healthCurrent
+	- healthTotal
+	- points
+	- 
+
+x Tool (Item) ++++++++++++++
+	- 
+
+x Weapon < Tool ++++++++++++++
+	+ types
+	- type
+	- totalCapacity
+	- currentCapacity
+	- damage
+	- speed
+	- bulletCount / spray / 
+
+x Ammunition < Tool ++++++++++++++
+	- weaponType
+	- capacity
+
+? ++++++++++++++
+
+? ++++++++++++++
+
+Scene Main Menu ++++++++++++++
+	- start button
+	- score display
+	- background
+
+Scene Level Open ++++++++++++++
+	- obstacles
+	- player
+	- enemies
+	- weapons
+	- ammo
+	- timer
+	- 
+
+? ++++++++++++++
+
+? ++++++++++++++
+
+? ++++++++++++++
+
+? ++++++++++++++
+
+? ++++++++++++++
+
+
+
+................................................................................................
+
+
+prefabs:
+
+
+
+................................................................................................
+
+schedule:
+x placeholder primitives
+x user in VR headset shows up
+x user see hands
+x user pick up blocks
+x user navigate around plane
+- user pick up guns
+- see laser in direction of user hand pointing
+- user shoot gun
+- user reload gun
+- user shoot target
+- user perimeter/bounds
+- targets shoot player
+- effects for bullet paths
+- auto-generated enemies
+- obstacles/collision
+- display timer & score
+- lose scenario: time / health
+- start screen
+- transition between scenes
+
+++++++++++++++++++++++++++++++++++++
+
+- prettier models
+- prettier UI
+- background
+................................................................................................
+
+
+OCULUS STEPS:
+
+
+https://developer.oculus.com/?locale=en_US
+
+https://developer.oculus.com/develop/
+
+https://developer.oculus.com/documentation/unity/unity-gs-overview/
+
+
+Window > Asset Store >
+> Oculus Integration
+> Import
+- OVRPlugin
+- update Spatializer plugins
+
+Build Settings > Android > 
+> Texture Compression > ASTC
+
+
+Edit > Project Settings > Player Settings
+- Company Name
+- Product Name
+- Version
+
+
+Edit > Project Settings > Android
+> Identification
+- Package Name
+- Version
+- Bundle Version Code > increment the existing version code
+- Minimum API Level > Android 6.0 Marshmallow (API level 23)
+- Target API Level > select Automatic (highest installed) to compile the app.
+- Install Location > Automatic
+
+A) 
+Edit > Project Settings
+> XR Plugin Management > Install XR Plugin Management
+> Android tab and select Oculus to install the Oculus XR plugin
+> XR Plugin Management > Oculus > modify the default settings
+
+B) 
+Edit > Project Settings > Player Settings > Android 
+> Expand XR Settings and select Virtual Reality Supported
+> Virtual Reality SDKs > Oculus.
+
+Edit > Project Settings > Android
+> Other Settings > Rendering
+> Color Space > Linear
+> Clear Auto Graphics API to manually pick and set the order in which the Graphics APIs are consumed
+	> OpenGL ES 3.0  (not Vulkan)
+> Select Multithreaded Rendering
+
+Edit > Project Settings > Quality
+> Pixel Light Count > maximum number of pixel light count > 1
+> Texture Quality > Full Res [max res]
+> Anisotropic Textures > Per Texture
+> Anti Aliasing > 4x [MSAA]
+> Clear the Soft Particles check box
+> Realtime Reflections Probes                   to update reflection probes during gameplay.
+> Billboards Face Camera                     to force billboards to face the camera while rendering instead the camera plane.
+
+
+> Oculus > Tools > Create store-compatible AndroidManifest.xml
+
+
+
+
+
+https://developer.oculus.com/documentation/unity/unity-utilities-overview/
+
+> Tools > Oculus > Update OVR Utilities Plugin
+
+
+OVRCameraRig
+- OVRManager
+
+
+OVRPlayerController
+
+
+OVRCubemapCaptureProbe
+
+
+
+
+https://developer.oculus.com/documentation/unity/unity-ovrinput/
+
+OVRInput.Update() and OVRInput.FixedUpdate()
+
+GetLocalControllerPosition() and GetLocalControllerRotation()
+
+
+OVRManager.display.RecenterPose()
+
+
+OVRInput.GetDown(OVRInput.Button.One);
+
+// returns true if the “X” button was released this frame.
+OVRInput.GetUp(OVRInput.RawButton.X);
+
+// returns a Vector2 of the primary (typically the Left) thumbstick’s current state.
+// (X/Y range of -1.0f to 1.0f)
+OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+
+// returns true if the primary thumbstick is currently pressed (clicked as a button)
+OVRInput.Get(OVRInput.Button.PrimaryThumbstick);
+
+// returns true if the primary thumbstick has been moved upwards more than halfway.
+// (Up/Down/Left/Right - Interpret the thumbstick as a D-pad).
+OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp);
+
+// returns a float of the secondary (typically the Right) index finger trigger’s current state.
+// (range of 0.0f to 1.0f)
+OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
+
+// returns a float of the left index finger trigger’s current state.
+// (range of 0.0f to 1.0f)
+OVRInput.Get(OVRInput.RawAxis1D.LIndexTrigger);
+
+// returns true if the left index finger trigger has been pressed more than halfway.
+// (Interpret the trigger as a button).
+OVRInput.Get(OVRInput.RawButton.LIndexTrigger);
+
+// returns true if the secondary gamepad button, typically “B”, is currently touched by the user.
+OVRInput.Get(OVRInput.Touch.Two);
+
+OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.Touch);
+OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger, OVRInput.Controller.Touch);
+
+
+
+
+OVRInput.GetActiveController()
+OVRInput.GetConnectedControllers()
+
+OVRInput.Controller.Touch) / OVRInput.Controller.LTouch & .RTouch
+OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.LTouch);
+OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.RTouch);
+
+
+
+https://developer.oculus.com/documentation/unity/unity-ovrboundary/
+
+OVRBoundary
+
+BoundaryType.OuterBoundary & BoundaryType.PlayArea
+Node.HandLeft  Node.HandRight  Node.Head
+
+OVRBoundary.BoundaryTestResult TestNode()
+OVRBoundary.BoundaryTestResult TestPoint()
+
+OVRBoundary.SetVisible()
+OVRBoundary.GetVisible()
+
+OVRBoundary.GetGeometry()
+OVRBoundary.GetDimensions()
+
+
+https://developer.oculus.com/documentation/unity/unity-haptics/
+
+SetControllerVibration()
+static void OVRInput.SetControllerVibration(float frequency, float amplitude, Controller controllerMask)
+OVRInput.SetControllerVibration(1, 1, OVRInput.Controller.RTouch)
+
+
+
+https://developer.oculus.com/documentation/unity/unity-handtracking/
+---- SKIPPED
+
+
+
+https://developer.oculus.com/documentation/unity/unity-fixed-foveated-rendering/
+
+OVRManager.fixedFoveatedRenderingLevel = FixedFoveatedRenderingLevel.High; // it's the maximum foveation level
+OVRManager.useDynamicFixedFoveatedRendering = true;
+
+
+
+https://developer.oculus.com/documentation/unity/unity-set-disp-freq/
+
+OVRManager.display.displayFrequency = 72.0f;
+
+
+https://developer.oculus.com/documentation/unity/unity-ovroverlay/
+
+OVROverlay
+
+
+https://developer.oculus.com/documentation/unity/unity-overlays/
+
+OVRManager.InputFocusLost
+OVRManager.InputFocusAcquired
+
+
+https://developer.oculus.com/documentation/unity/unity-lifecycle/
+
+
+https://developer.oculus.com/documentation/unity/unity-hmd-emulation
+
+OVRHeadsetEmulator
+??????????????????
+
+
+
+
+
+
+
+
+
+
+custom hands:
+https://developer.oculus.com/documentation/unity/unity-sf-customhands/?locale=en_US
+
+
+
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ UNITY DOCS
+
+https://docs.unity3d.com/2019.2/Documentation/Manual/VROverview.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ORHaptics
+OVRInput
+
+
+
+
+
+https://www.youtube.com/watch?v=rnOR1OANIAU&vl=en-US
+
+
+
+
+VIDEOS:
+
+1) https://www.youtube.com/watch?v=sKQOlqNe_WY&
+2) https://www.youtube.com/watch?v=rnOR1OANIAU&vl=en-US
+3) https://www.youtube.com/watch?v=98gfkursxYI
+4) https://www.youtube.com/watch?v=h7z4E8Qy8Ks
+5) https://www.youtube.com/watch?v=9KJqZBoc8m4
+
+Hands ) https://www.youtube.com/watch?v=Iphbtuhun-8
+
+Window > Animations > Animatin Control
+> Create new Clip > 
+Right-Click State > Make Transiation
+> Hand Pose Script
+
+
+Hand Tracking ) https://www.youtube.com/watch?v=lBzwUKQ3tbw
+
+
+Newer:
+1) https://www.youtube.com/watch?v=gGYtahQjmWQ
+2) https://www.youtube.com/watch?v=VdT0zMcggTQ
+3) https://www.youtube.com/watch?v=fZXKGJYri1Y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+...
+https://docs.unity3d.com/Manual/Input.html
+https://docs.unity3d.com/ScriptReference/Input.html
+
+
+
+
+
+
+
+
+
+
+https://developer.oculus.com/blog/-avatar-locomotion-sample/
+
+
+https://www.mikeimmersed.com/blog/rift-in-unity-2-see-your-hands-in-vr/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+multisample anti-aliasing (MSAA) level appropriately high to compensate for stereo rendering
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://developer.oculus.com/downloads/unity/
+
+...
+
+
+1PASH9B9BA9167
+
