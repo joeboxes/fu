@@ -76,6 +76,28 @@ public class World : MonoBehaviour
             
             lazerBeam.transform.position = destPos;
             lazerBeam.transform.rotation = destRot;
+
+            Vector3 origin = destPos;
+            Vector3 direction = new Vector3(0,0,1);
+            direction = Quaternion.Inverse(destRot) * direction;
+            
+            Ray ray = new Ray(origin, direction);
+            // Debug.DrawRay();
+            // int layerMask = 0;
+            RaycastHit hitInfo = new RaycastHit();
+            // distance = 1000
+            // Physics.Raycast(origin, direction, hitInfo, DistanceJoint2D, layerMask);
+            
+            
+            Debug.DrawRay(origin,direction);
+            
+            Physics.Raycast(ray, out hitInfo);
+            // Physics.Raycast(origin, direction, hitInfo);
+            if (hitInfo.rigidbody != null)
+            {
+                Debug.Log("RICHIE - hitInfo: " + hitInfo + " : " + hitInfo.rigidbody);
+                //Physics.Raycast(origin, direction, hitInfo, distance, layerMask);
+            }
         }
     }
 }
