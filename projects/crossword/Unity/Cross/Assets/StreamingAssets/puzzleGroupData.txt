@@ -1,0 +1,14 @@
+{
+	"result": "success",
+	"data": {
+		"offset": 0,
+		"count": 10,
+		"groups": [{
+			"id": "1234567890ABCDEF",
+			"title": "Animals",
+			"description": "Everyone likes animals don't they?",
+			"iconURL": "http://www.google.com/image.jpg",
+			"count": 12
+		}]
+	}
+}
