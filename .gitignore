@@ -1,4 +1,5 @@
 *DS_Store
+.DS_Store
 
 Temp/**
 .idea/**
@@ -7,4 +8,8 @@ TextMesh\ Pro/
 
 **/Temp/**/**
 
-
+**/Unity/**.csproj
+**/Unity/**/Build
+**/Unity/**/Library
+**/Unity/**/Logs
+**/Unity/**/obj
